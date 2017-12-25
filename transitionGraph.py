@@ -3,6 +3,8 @@
     State Node class
     Represents a single state in a transition graph
 """
+NODE = 0
+VALUE = 1
 class StateNode(object):
     def __init__(self, stateNumber):
         # list of edges {int, id's: (StateNode nodes, num_transitions)}
@@ -15,29 +17,44 @@ class StateNode(object):
         rStateNumber = rNode.stateNumber
         self.edges[rStateNumber] = (rNode, value)
 
+    def removeEdge(self, rNode):
+        self.edges[rNode.stateNumber] = None
+
+    def getEdge(self, otherNode):
+        return self.edges[otherNode.stateNumber]
+
     def addToEdge(self, otherNode, value):
         # check if edge exists
+        edge = self.getEdge(otherNode)
+        if edge == None:
+            self.addEdge(otherNode, 0)
 
-        if value < 0 and -value > 
+        edge[VALUE] += value
+        assert edge[VALUE] > 0
 
 
     def subtractFromEdge(self, otherNode, value):
-        pass
+        # check if the edge exists
+        edge = self.getEdge(otherNode)
+        assert edge != None
+
+        edge[VALUE] -= value
+        assert edge[VALUE] > 0
 
     def reverseFlow(self, otherNode, amount):
         # get edge to reduce
-        edge = self.edges[otherNode.stateNumber]
-        assert edge[1] >= amount
+        edge = self.getEdge(otherNode)
 
         # reduce the edge
-        edge[1] -= amount
+        self.subtractFromEdge(otherNode, amount)
 
         # check if we need to remove the edge now
-        if edge[1] == 0:
+        if edge[VALUE] == 0:
             # remove the edge
+            self.removeEdge(otherNode)
 
         # add flow to the reverse edge
-
+        otherNode.addToEdge(self)
 
         
 
