@@ -70,7 +70,42 @@ def maxFlow(graph):
     }
 
     # do reachability to find the new partition
-    # TODO
+    new_partition = reachability(graph, graph.sourceNode)
+
+
+"""
+    Find all nodes reachable from a node in a given graph
+
+    Inputs:
+        graph - transition graph to work on
+        startNode - node to start from
+    Returns:
+        list of nodes that are reachable from the start node
+"""
+def reachability(graph, startNode):
+    assert startNode != None
+
+    # setup for depth first search
+    # TODO double check how to do this
+    partition = {}
+    partition.add(startNode)
+
+    # start running depth first search
+    
+def reachability_helper(graph, partition, node):
+    if node == None:
+        return
+
+    if node in partition:
+        return
+
+    # node is new
+    # TODO double check how to add to a hash map
+    partition.add(startNode)
+
+    for edge in node.edges:
+        reachability_helper(edge[NODE])
+
 
 """
     Run through the path and apply the maximum flow we can through the path
@@ -78,7 +113,7 @@ def maxFlow(graph):
 def applyAugmentingPath(graph, path):
     lastNode = None
     currentNode = path[0]
-    maximum = 0
+    maxPathFlow = 0
 
     # find the maximum flow
     for node in path[1:]:
@@ -87,9 +122,9 @@ def applyAugmentingPath(graph, path):
 
         # find the edge
         edge = lastNode.edges[currentNode.stateNumber]
-        value = edge[1]
+        value = edge[VALUE]
 
-        maximum = max(maximum, value) 
+        maxPathFlow = max(maxPathFlow, value) 
 
     # apply the maximum flow to each node in the graph
     lastNode = None
@@ -99,7 +134,8 @@ def applyAugmentingPath(graph, path):
         lastNode = currentNode
         currentNode = node
 
-        # reverse the flow of the 
+        # reverse the flow of the edge
+        lastNode.reverseFlow(currentNode, maxPathFlow)
 
 
     
@@ -127,7 +163,7 @@ def dfs(path, node, goal):
 
     for edge in node.edges:
         # TODO double check iterating through a hash map does not iterate through the empty crap
-        result = dfs(path, edge[0], goal)
+        result = dfs(path, edge[NODE], goal)
         if result == 1:
             return 1
 
