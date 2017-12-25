@@ -64,8 +64,18 @@ class TransitionGraph(object):
         self.sourceNode = None
         self.sinkNode = None
 
+    # get a node and create it if it does not exist
+    def getNode(self, nodeId):
+        node = self.nodes[nodeId]
+
+        if node == None:
+            nod = self.addNode(nodeId)
+
+        return node
+        
+
     def addNode(self, nodeId):
-        self.nodes[node] = StateNode(nodeId)
+        self.nodes[nodeId] = StateNode(nodeId)
 
 
     """
