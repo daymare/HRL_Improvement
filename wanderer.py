@@ -8,6 +8,10 @@ import gym
 
 from transitionGraph import *
 
+# constants
+epsiodes = 20
+maxTimesteps = 2000
+
 class Wanderer:
     def __init__(self):
         # initialize transition graph
@@ -44,9 +48,12 @@ class Wanderer:
 
 
 def main():
-    pass
+    agent = Wanderer()
+
+    for i in range(episodes):
+        agent.runEpisode(maxTimesteps)
 
 
 if __name__ == 'main':
-        pass
+    main()
 
