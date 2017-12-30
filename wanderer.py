@@ -39,9 +39,7 @@ class Wanderer:
             currentState = nextState
             
             # add to transition graph
-            startingNode = self.graph.getNode(lastState)
-            endingNode = self.graph.getNode(currentState)
-            startingNode.addToEdge(endingNode, 1)
+            self.graph.addTransition(lastState, currentState)
 
             if terminal == True:
                 break
