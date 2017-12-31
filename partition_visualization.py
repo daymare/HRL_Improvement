@@ -46,8 +46,79 @@ def render_partition(partition, width=3, mode='human'):
     fill_maps(maps, partition)
 
 
-def fill_maps(maps, partition):
-    pass
+def fill_maps(maps, width, partition):
+    num_locs = 4
+    map_x = 0
+    map_y = 0
+
+    # iterate through each possibility of states
+    for destLoc in range(num_locs):
+        for passLoc in range(num_locs):
+            # skip states where passenger location 
+            # is equal to destination location
+            if destLoc == passLoc:
+                continue
+
+            # fill the next map
+            cur_map = maps[map_y][map_x]
+            fill_map(cur_map, partition, destLoc, passLoc)
+
+            # increment map 
+            map_x += 1
+            if map_x == width:
+                map_y += 1
+                map_x = 0
+
+            # fill the bordering map with the passenger picked up map
+            cur_map = maps[map_y][map_x]
+            fill_map(cur_map, partition, destLoc, 4)
+
+            # increment map 
+            map_x += 1
+            if map_x == width:
+                map_y += 1
+                map_x = 0
+
+def fill_map(map, partition, desLoc, passLoc):
+    taxirow = 2
+    taxicol = 2
+
+    # fill in the map with the state information
+    
+    # fill in the partition
+
+
+
+
+"""
+    encode a state into an integer
+"""
+def encode(taxirow, taxicol, passloc, destidx):
+    # (5) 5, 5, 4
+    i = taxirow
+    i *= 5
+    i += taxicol
+    i *= 5
+    i += passloc
+    i *= 4
+    i += destidx
+    return i
+
+"""
+    decode a state integer into it's parts
+"""
+def decode(i):
+    out = []
+    out.append(i % 4)
+    i = i // 4
+    out.append(i % 5)
+    i = i // 5
+    out.append(i % 5)
+    i = i // 5
+    out.append(i)
+    assert 0 <= i < 5
+    return reversed(out)
+
 
 
 """
