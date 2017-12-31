@@ -3,13 +3,14 @@
 """
 
 import random
+import os
 
 import gym
 
 from transitionGraph import *
 
 # constants
-epsiodes = 20
+episodes = 20
 maxTimesteps = 2000
 
 class Wanderer:
@@ -19,7 +20,6 @@ class Wanderer:
 
         # make taxi environment
         self.env = gym.make('Taxi-v2')
-        self.numActions = env.actionSpace.n
 
     def runEpisode(self, maxTimesteps=2000):
         initialState = self.env.reset()
@@ -29,7 +29,7 @@ class Wanderer:
 
         for i in range(maxTimesteps):
             # get random action
-            action = random.randint(self.numActions)
+            action = self.env.action_space.sample()
 
             # perform action
             nextState, reward, terminal, _ = self.env.step(action)
@@ -40,6 +40,11 @@ class Wanderer:
             
             # add to transition graph
             self.graph.addTransition(lastState, currentState)
+
+            # render the environment
+            os.system('clear')
+            self.env.render()
+
 
             if terminal == True:
                 break
@@ -52,6 +57,6 @@ def main():
         agent.runEpisode(maxTimesteps)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     main()
 
