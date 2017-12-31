@@ -46,7 +46,35 @@ def render_partition(partition, width=3, mode='human'):
     fill_maps(maps, partition)
     
     # print out the maps to the screen
+    print_maps(maps)
 
+# print populated 2d array of maps
+def print_maps(maps):
+    height = len(maps)
+    width = len(maps[0])
+    
+    for i in range(height):
+        map_line = maps[i]
+        print_map_line(map_line)
+
+def print_map_line(map_line):
+    height = len(map_line[0])
+    
+    for j in range(height):
+        for map in map_line:
+            # print out a line of a map
+            print_ns(map[j])
+        print_ns("\n")
+            
+
+"""
+    print with no space
+
+    print function except with no space or newline at the end
+"""
+def print_ns(obj):
+    sys.stdout.write(str(obj))
+    sys.stdout.flush()
 
 def fill_maps(maps, width, partition):
     num_locs = 4
