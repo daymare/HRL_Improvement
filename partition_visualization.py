@@ -31,7 +31,7 @@ LOCS = [(0,0), (0,4), (4,0), (4,3)]
 
     WARNING: only human mode is supported currently
 """
-def render_partition(partition, width=4, mode='human'):
+def render_partition(partition, width=6, mode='human'):
     # calculate the number of maps we will need to display
     # note that the passenger can be in 5 locations, one for being in the taxi
     # formula is (choose_destination * choose_passenger_location)
@@ -63,10 +63,19 @@ def print_map_line(map_line):
     height = len(map_line[0])
     
     for j in range(height):
-        for map in map_line:
+        for nmap in map_line:
             # print out a line of a map
-            print_ns(map[j])
+            print_map_string(nmap[j])
         print_ns("\n")
+
+"""
+    print a line from a map
+    print out each character in an array of maps
+"""
+def print_map_string(map_string):
+    for c in map_string:
+        if c != '\n':
+            print_ns(c)
             
 
 """
@@ -133,7 +142,7 @@ def highlight_partition(smap, partition, state):
 
             if cState in partition:
                 # color this location yellow 
-                set_pixel(smap, taxirow, taxicol, 'yellow', True)
+                set_pixel(smap, taxirow, taxicol, 'red', True)
 
 
 def set_pixel(out, row, column, color, highlight=False):
