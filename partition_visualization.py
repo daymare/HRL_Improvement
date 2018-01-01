@@ -28,22 +28,24 @@ LOCS = [(0,0), (0,4), (4,0), (4,3)]
     render patition,
 
     display a rectangular grid of maps each highlighted with the parititon
+
+    WARNING: only human mode is supported currently
 """
-def render_partition(partition, width=3, mode='human'):
+def render_partition(partition, width=4, mode='human'):
     # calculate the number of maps we will need to display
     # note that the passenger can be in 5 locations, one for being in the taxi
     # formula is (choose_destination * choose_passenger_location)
     # which equals: (4 choices of destination) * (4 choices of passenger location, 3 + 1 for taxi)
     num_locations = len(LOCS)
-    num_maps = num_locations * num_locations
+    num_maps = ((num_locations * num_locations) - num_locations) * 2
 
-    height = math.ceil(num_maps / width)
+    height = int(math.ceil(num_maps / width)) 
 
     # create a 2d array of maps, one for each state
     maps = create_map_array(width, height)
     
     # fill in each map with the proper highlights
-    fill_maps(maps, partition)
+    fill_maps(maps, width, partition)
     
     # print out the maps to the screen
     print_maps(maps)
@@ -139,7 +141,9 @@ def set_pixel(out, row, column, color, highlight=False):
 
 
 def highlight_state(out, state):
-    taxirow, taxicol, passidx, destidx = decode(s)
+    taxirow, taxicol, passidx, destidx = decode(state)
+
+    def ul(x): return "_" if x == " " else x
     
     # highlight taxi
     if passidx < 4:
@@ -148,7 +152,7 @@ def highlight_state(out, state):
         out[1+taxirow][2*taxicol+1] = utils.colorize(out[1+taxirow][2*taxicol+1], 'yellow', highlight=True)
 
         # passenger
-        pi, pj = locs[passidx]
+        pi, pj = LOCS[passidx]
         out[1+pi][2*pj+1] = utils.colorize(out[1+pi][2*pj+1], 'blue', bold=True)
     else: 
         # passenger in taxi
@@ -156,9 +160,8 @@ def highlight_state(out, state):
         out[1+taxirow][2*taxicol+1] = utils.colorize(ul(out[1+taxirow][2*taxicol+1]), 'green', highlight=True)
 
     # highlight the destination
-    di, dj = locs[destidx]
+    di, dj = LOCS[destidx]
     out[1+di][2*dj+1] = utils.colorize(out[1+di][2*dj+1], 'magenta')
-    outfile.write("\n".join(["".join(row) for row in out])+"\n")
 
 
 
