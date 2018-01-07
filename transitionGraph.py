@@ -33,6 +33,11 @@ class TransitionGraph:
     def getEdgeWeight(self, firstState, secondState):
         return self.g[firstState]['weight']
 
+    # get the size of the graph in both number of edges and number of nodes
+    def getSize(self):
+        nodes = self.graph.number_of_nodes()
+        edges = self.graph.number_of_edges()
+
     # get the weight of all outgoing edges from a given node
     def getNodeWeight(self, state):
         weight_sum = 0
