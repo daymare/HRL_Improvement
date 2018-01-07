@@ -41,6 +41,17 @@ def LCut(graph):
 def getPartition(graph, eigenVector):
     pass
 
+# map all nodes to an integer between 0 and n
+def mapToN(graph):
+    list_nodes = graph.getNodes()
+    n = len(list_nodes)
+
+    node_map = {}
+
+    for i in range(n):
+        node_map[i] = list_nodes[i]
+
+    return node_map
 
 """
     construct the diagonal matrix D as described in Shi and Malik (2000)
@@ -54,7 +65,6 @@ def getPartition(graph, eigenVector):
     If the edge (i, j) does not exist w_i_j will equal 0
 """
 def constructD(graph):
-    
     pass
 
 """
@@ -66,7 +76,20 @@ def constructD(graph):
     W will be the matrix where W(i, j) = w_i_j
 """
 def constructW(graph):
-    pass
+    n, _ = graph.getSize()
+    W = numpy.zeros((n,n))
+
+    node_map = mapToN(graph)
+
+    for i in range(n):
+        for j in range(n):
+            firstState = node_map[i]
+            secondState = node_map[j]
+            W[i, j] = graph.getEdgeWeight(firstState, secondState)
+
+    return W
+    
+
 
 
 
