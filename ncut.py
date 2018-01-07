@@ -65,7 +65,18 @@ def mapToN(graph):
     If the edge (i, j) does not exist w_i_j will equal 0
 """
 def constructD(graph):
-    pass
+    n, _ = graph.getSize()
+    D = numpy.zeros(n,n)
+
+    node_map = mapToN(graph)
+
+    for i in range(n):
+        state_node = node_map[i]
+        weight = graph.getNodeWeight(state_node)
+
+        D[i,i] = weight
+
+    return D
 
 """
     construct the weight matrix as described in Shi and Malik (2000)
