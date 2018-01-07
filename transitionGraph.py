@@ -28,15 +28,25 @@ class TransitionGraph:
             # remove source and sink nodes
             self.g.remove_node('source')
             self.g.remove_node('sink')
+
+    # get a list of all the nodes in the graph
+    def getNodes(self):
+        return self.graph.nodes()
     
     # get the weight of a single edge
     def getEdgeWeight(self, firstState, secondState):
-        return self.g[firstState]['weight']
+        if self.g.has_edge(firstState, secondState):
+            return self.g[firstState][secondState]['weight']
+        else:
+            return 0
 
     # get the size of the graph in both number of edges and number of nodes
     def getSize(self):
         nodes = self.graph.number_of_nodes()
         edges = self.graph.number_of_edges()
+
+        return nodes, edges
+
 
     # get the weight of all outgoing edges from a given node
     def getNodeWeight(self, state):
