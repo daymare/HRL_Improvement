@@ -29,6 +29,20 @@ class TransitionGraph:
             self.g.remove_node('source')
             self.g.remove_node('sink')
     
+    # get the weight of a single edge
+    def getEdgeWeight(self, firstState, secondState):
+        return self.g[firstState]['weight']
+
+    # get the weight of all outgoing edges from a given node
+    def getNodeWeight(self, state):
+        weight_sum = 0
+
+        for edge in self.g[firstState]:
+            weight_sum += edge['weight']
+
+        return weight_sum
+
+    
     def addTransition(self, firstState, secondState):
         if self.g.has_edge(firstState, secondState):
             # increment edge
