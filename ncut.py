@@ -25,11 +25,23 @@ def LCut(graph):
 
     # find the second eigenvector of the system
     eigenValues, eigenVectors = numpy.linalg.eig(system)
+    # sort the eigenvalues/eigenvectors to find the second smallest eigenvalue and its corresponding eigenvector
+    eigenValues, eigenVectors = sortEigen(eigenValues, eigenVectors)
 
     # get the partition based on the second eigenvalue
     partition = getPartition(graph, eigenVectors[1])
 
     return partition
+
+"""
+    Sort a list of eigenvalues and it's corresponding list of eigenVectors
+"""
+def sortEigen(eigenValues, eigenVectors):
+    idx = eigenValues.argsort()[::-1]
+    eigenValues = eigenValues[idx]
+    eigenVectors = eigenVectors[:, idx]
+
+    return eigenValues, eigenVectors
 
 
 """
