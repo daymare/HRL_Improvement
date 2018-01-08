@@ -1,0 +1,8 @@
+
+Implement eigensolving with the Lanczos method from scipy. Will take solving eigenvalues from O(n^3) to O(n) which will allow us to work with larger transition graphs.
+
+
+
+consider changing parittions from a strictly positive parittion to a positive and a negative partition, may allow for the creation of more classes of partition which we may need for maxq.
+To create subtasks we may need positive, negative, and neutral partitions. for goal states, failure states, and active states.
+
