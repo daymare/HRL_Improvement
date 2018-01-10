@@ -29,6 +29,38 @@ class TransitionGraph:
             self.g.remove_node('source')
             self.g.remove_node('sink')
 
+    """
+        calculate the approximate ncut value of the partion as described in Simsek and Barto (2005)
+
+        ncut(partition):
+            A = partition
+            B = ~A
+
+            cut(X,Y): sum of weights on edges that originate in X and end in Y
+            vol(X) sum of wieghts on all edges that originate in X
+
+            value = (cut(A,B) + cut(B,A)) / (vol(A) + cut(B,A)) + 
+                (cut(B,A) + cut(A,B)) / (vol(B) + cut(A,B))
+
+            since our graph is undirected cut(X,Y) == cut(Y,X)
+
+            we can simplify value to:
+            value = (2 * cut(A,B) / (vol(A) + cut(A,B))) + (2 * cut(A,B) / vol(B) + cut(A,B))
+
+    """
+    def evaluateNCut(self, partition):
+        pass
+
+    def evaluateCut(self, partition):
+        pass
+
+    def evaluateVolume(self, partition):
+        pass
+
+    def invertPartition(self, partition):
+        pass
+
+
     # get a list of all the nodes in the graph
     def getNodes(self):
         return self.graph.nodes()
