@@ -52,10 +52,26 @@ class TransitionGraph:
         pass
 
     def evaluateCut(self, partition):
-        pass
+        cut = 0
+
+        for nodeID in partition:
+            neighbors = self.g.neighbors(nodeID)
+
+            for neighborID in neighbors:
+                if neighborID not in partition: # TODO with current partition implementation this is O(n) which is terrible
+                    cut += self.g[nodeID][neighborID]['weight']
+
+        return cut
 
     def evaluateVolume(self, partition):
-        pass
+        volume = 0
+
+        for nodeId in partition:
+            node = self.g[nodeId]
+            for edge in node:
+                volume += edge['weight']
+
+        return volume
 
     def invertPartition(self, partition):
         pass
