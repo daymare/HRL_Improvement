@@ -49,8 +49,20 @@ class TransitionGraph:
 
     """
     def evaluateNCut(self, partition):
-        pass
+        cut_value = self.evaluateCut(partition)
+        vol_partition = self.evaluateVolume(partition)
 
+        i_partition = self.invertPartition(partition)
+        vol_i_partition = self.evaluateVolume(i_partition)
+
+        first_term = 2 * cut_value / (vol_partition + cut_value)
+        second_term = 2 * cut_value / (vol_partition + cut_value)
+
+        ncut_value = first_term + second_term
+        return ncut_value
+
+    """
+    """
     def evaluateCut(self, partition):
         cut = 0
 
@@ -74,7 +86,15 @@ class TransitionGraph:
         return volume
 
     def invertPartition(self, partition):
-        pass
+        i_partition = []
+
+        nodes = self.g.nodes()
+
+        for node in nodes:
+            if node not in partition: # TODO with current partition implementation this is O(n) which is terrible
+                i_partition.append(node)
+
+        return i_partition
 
 
     # get a list of all the nodes in the graph
