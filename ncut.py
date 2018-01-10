@@ -29,7 +29,7 @@ def LCut(graph):
     eigenValues, eigenVectors = sortEigen(eigenValues, eigenVectors)
 
     # get the partition based on the second eigenvalue
-    partition = getPartition(graph, eigenVectors[1])
+    partition = findBestPartition(graph, eigenVectors[1])
 
     return partition
 
@@ -43,17 +43,8 @@ def sortEigen(eigenValues, eigenVectors):
 
     return eigenValues, eigenVectors
 
-
-"""
-    get best partition based on the given eigenvector
-
-    graph - graph to partition
-    eigenVector - second eigenvector of the system described in Simsek and Barto (2005)
-"""
-def getPartition(graph, eigenVector):
-    pass
-
 # map all nodes to an integer between 0 and n
+# TODO ensure that this function has the same output between calls
 def mapToN(graph):
     list_nodes = graph.getNodes()
     n = len(list_nodes)
@@ -64,6 +55,82 @@ def mapToN(graph):
         node_map[i] = list_nodes[i]
 
     return node_map
+
+
+"""
+    get best partition based on the given eigenvector
+
+    Each value in our eigenvector represents one of our nodes. To find which nodes belong in the partition we need to choose a splitting value s.t. values greater than the splitting value belong in one partition, while values below belong in the other.
+    To do this we are going to take L evenly spaced cuts across the range of the eigenvector.
+
+    distance between each cut will be range / (L+1)
+    
+    (| is a cut to evaluate. Each space is a distance D)
+    min | | | | | max
+
+    graph - graph to partition
+    eigenVector - second eigenvector of the system described in Simsek and Barto (2005)
+"""
+def findBestPartition(graph, eigen_vector, num_cuts):
+    minimum = min(eigen_vector)
+    maximum = max(eigen_vector)
+    eigen_range = maximum - minimum
+
+    partition_distance = eigen_range / (num_cuts + 1)
+
+    # evaluate first partition
+    partition_value = minimum + partition_distance
+    partition = getPartition(graph, eigen_vector, partition_value)
+    cut_value = evaluateCut(graph, partition)
+
+    # initialize maximum
+    max_partition = partition
+    max_cut = cut_value
+    
+    for i in range(num_cuts-1):
+        # get the next value 
+        partition_value += partition_distance
+        # get partition from current cut
+        partition = getPartition(graph, eigen_vector, partition_value)
+        # evaluate parition and find current max
+        cut_value = evaluateCut(graph, partition)
+
+        if cut_value > max_cut:
+            # set the current values as new maximums
+            max_partition = partition
+            max_cut = cut_value
+
+def getPartition(graph, eigen_vector, partition_value):
+    node_map = mapToN(graph)
+    n = len(eigen_vector)
+
+    partition = []
+
+    for i in range(n):
+        if eigen_vector[i] < cut_value:
+            partition.append(node_map[i])
+
+    return partition
+
+"""
+    calculate the approximate ncut value of the partion as described in Simsek and Barto (2005)
+
+    ncut(partition):
+        A = partition
+        B = ~A
+
+        value = (cut(A,B) + cut(B,A)) / (vol(A) + cut(B,A)) + 
+            (cut(B,A) + cut(A,B)) / (vol(B) + cut(A,B))
+
+        cut(X,Y): sum of weights on edges that originate in X and end in Y
+        vol(X) sum of wieghts on all edges that originate in X
+
+        since our graph is undirected cut(X,Y) == cut(Y,X)?
+"""
+def evaluateCut(graph, partition):
+    pass
+
+
 
 """
     construct the diagonal matrix D as described in Shi and Malik (2000)
