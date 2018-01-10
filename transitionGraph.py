@@ -61,8 +61,7 @@ class TransitionGraph:
         ncut_value = first_term + second_term
         return ncut_value
 
-    """
-    """
+    # get the sum of weight on all edges originating in the partition and ending not in the partition
     def evaluateCut(self, partition):
         cut = 0
 
@@ -75,6 +74,7 @@ class TransitionGraph:
 
         return cut
 
+    # get the sum of weight on all edges originating in the partition
     def evaluateVolume(self, partition):
         volume = 0
 
@@ -85,6 +85,7 @@ class TransitionGraph:
 
         return volume
 
+    # get the complement of the partition
     def invertPartition(self, partition):
         i_partition = []
 
