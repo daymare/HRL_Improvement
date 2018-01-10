@@ -93,12 +93,14 @@ def findBestPartition(graph, eigen_vector, num_cuts):
         # get partition from current cut
         partition = getPartition(graph, eigen_vector, partition_value)
         # evaluate parition and find current max
-        cut_value = evaluateCut(graph, partition)
+        cut_value = graph.evaluateNCut(partition)
 
         if cut_value > max_cut:
             # set the current values as new maximums
             max_partition = partition
             max_cut = cut_value
+
+    return max_partition
 
 def getPartition(graph, eigen_vector, partition_value):
     node_map = mapToN(graph)
@@ -111,25 +113,6 @@ def getPartition(graph, eigen_vector, partition_value):
             partition.append(node_map[i])
 
     return partition
-
-"""
-    calculate the approximate ncut value of the partion as described in Simsek and Barto (2005)
-
-    ncut(partition):
-        A = partition
-        B = ~A
-
-        value = (cut(A,B) + cut(B,A)) / (vol(A) + cut(B,A)) + 
-            (cut(B,A) + cut(A,B)) / (vol(B) + cut(A,B))
-
-        cut(X,Y): sum of weights on edges that originate in X and end in Y
-        vol(X) sum of wieghts on all edges that originate in X
-
-        since our graph is undirected cut(X,Y) == cut(Y,X)?
-"""
-def evaluateCut(graph, partition):
-    pass
-
 
 
 """
