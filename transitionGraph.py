@@ -80,8 +80,10 @@ class TransitionGraph:
 
         for nodeId in partition:
             node = self.g[nodeId]
-            for edge in node:
-                volume += edge['weight']
+            for neighbor in node:
+                print node, neighbor
+                weight = self.getEdgeWeight(nodeId, neighbor)
+                volume += weight
 
         return volume
 
@@ -100,7 +102,7 @@ class TransitionGraph:
 
     # get a list of all the nodes in the graph
     def getNodes(self):
-        return self.graph.nodes()
+        return self.g.nodes()
     
     # get the weight of a single edge
     def getEdgeWeight(self, firstState, secondState):
@@ -111,8 +113,8 @@ class TransitionGraph:
 
     # get the size of the graph in both number of edges and number of nodes
     def getSize(self):
-        nodes = self.graph.number_of_nodes()
-        edges = self.graph.number_of_edges()
+        nodes = self.g.number_of_nodes()
+        edges = self.g.number_of_edges()
 
         return nodes, edges
 
@@ -121,8 +123,9 @@ class TransitionGraph:
     def getNodeWeight(self, state):
         weight_sum = 0
 
-        for edge in self.g[firstState]:
-            weight_sum += edge['weight']
+        for other_state in self.g[state]:
+            edge_weight = self.getEdgeWeight(state, other_state)
+            weight_sum += edge_weight
 
         return weight_sum
 

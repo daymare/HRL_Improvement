@@ -4,7 +4,7 @@
     Citations:
     Shi, Jianbo, and Jitendra Malik. "Normalized cuts and image segmentation." IEEE Transactions on pattern analysis and machine intelligence 22.8 (2000): 888-905.
 
-    Şimşek, Özgür, Alicia P. Wolfe, and Andrew G. Barto. "Identifying useful subgoals in reinforcement learning by local graph partitioning." Proceedings of the 22nd international conference on Machine learning. ACM, 2005. 
+    Simsek, Ozgur, Alicia P. Wolfe, and Andrew G. Barto. "Identifying useful subgoals in reinforcement learning by local graph partitioning." Proceedings of the 22nd international conference on Machine learning. ACM, 2005. 
 """
 
 import numpy
@@ -29,7 +29,7 @@ def LCut(graph):
     eigenValues, eigenVectors = sortEigen(eigenValues, eigenVectors)
 
     # get the partition based on the second eigenvalue
-    partition = findBestPartition(graph, eigenVectors[1])
+    partition = findBestPartition(graph, eigenVectors[1], 5)
 
     return partition
 
@@ -51,8 +51,10 @@ def mapToN(graph):
 
     node_map = {}
 
-    for i in range(n):
-        node_map[i] = list_nodes[i]
+    i = 0
+    for node in list_nodes:
+        node_map[i] = node
+        i += 1
 
     return node_map
 
@@ -81,7 +83,7 @@ def findBestPartition(graph, eigen_vector, num_cuts):
     # evaluate first partition
     partition_value = minimum + partition_distance
     partition = getPartition(graph, eigen_vector, partition_value)
-    cut_value = evaluateCut(graph, partition)
+    cut_value = graph.evaluateNCut(partition)
 
     # initialize maximum
     max_partition = partition
@@ -109,7 +111,7 @@ def getPartition(graph, eigen_vector, partition_value):
     partition = []
 
     for i in range(n):
-        if eigen_vector[i] < cut_value:
+        if eigen_vector[i] < partition_value:
             partition.append(node_map[i])
 
     return partition
@@ -128,7 +130,7 @@ def getPartition(graph, eigen_vector, partition_value):
 """
 def constructD(graph):
     n, _ = graph.getSize()
-    D = numpy.zeros(n,n)
+    D = numpy.zeros((n,n))
 
     node_map = mapToN(graph)
 
