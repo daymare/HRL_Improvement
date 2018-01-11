@@ -1,5 +1,5 @@
 """
-    agent that wanders around randomly to build a transition graph for testing the improve algorithm
+    agent that wanders around randomly to build a transition graph for testing partition algorithms
 """
 
 import random
@@ -8,10 +8,13 @@ import os
 import gym
 
 from transitionGraph import *
+import partition_visualization as pv
+import ncut
 
 # constants
 episodes = 20
 maxTimesteps = 2000
+render = False
 
 class Wanderer:
     def __init__(self):
@@ -21,7 +24,11 @@ class Wanderer:
         # make taxi environment
         self.env = gym.make('Taxi-v2')
 
-    def runEpisode(self, maxTimesteps=2000):
+        self.numEpisodes = 0
+
+    # run a single episode of wandering
+    # store transition information in the transition graph
+    def runEpisode(self, maxTimesteps=2000, render=False):
         initialState = self.env.reset()
 
         lastState = None
@@ -42,19 +49,40 @@ class Wanderer:
             self.graph.addTransition(lastState, currentState)
 
             # render the environment
-            os.system('clear')
-            self.env.render()
-
+            if render == True:
+                os.system('clear')
+                self.env.render()
 
             if terminal == True:
                 break
+
+        print "finished episode: {}".format(self.numEpisodes)
+        self.numEpisodes += 1
+
+    # find a partition based on the transition graph
+    def findPartition(self):
+        partition = ncut.LCut(self.graph)
+        return partition
+        pv.render_partition(partition)
 
 
 def main():
     agent = Wanderer()
 
+    # populate transition graph
+    print "running episodes"
     for i in range(episodes):
-        agent.runEpisode(maxTimesteps)
+        agent.runEpisode(maxTimesteps, render)
+    print "finished running episodes"
+    
+    # find partition
+    print "finding partition"
+    partition = agent.findPartition()
+    print "finished finding partition"
+
+    # render
+    os.system('clear')
+    pv.render_partition(partition)
 
 
 if __name__ == '__main__':
