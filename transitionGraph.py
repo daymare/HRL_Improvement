@@ -81,7 +81,6 @@ class TransitionGraph:
         for nodeId in partition:
             node = self.g[nodeId]
             for neighbor in node:
-                print node, neighbor
                 weight = self.getEdgeWeight(nodeId, neighbor)
                 volume += weight
 
