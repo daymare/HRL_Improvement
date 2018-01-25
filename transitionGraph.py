@@ -66,7 +66,7 @@ class TransitionGraph:
             neighbors = self.g.neighbors(nodeID)
 
             for neighborID in neighbors:
-                if neighborID in partition[1]: # TODO with current partition implementation this is O(n) which is terrible
+                if neighborID in partition[1]: 
                     cut += self.g[nodeID][neighborID]['weight']
 
         return cut
@@ -98,7 +98,7 @@ class TransitionGraph:
         nodes = self.g.nodes()
 
         for node in nodes:
-            if node not in partition: # TODO with current partition implementation this is O(n) which is terrible
+            if node not in partition: 
                 i_partition.append(node)
 
         return i_partition

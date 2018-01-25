@@ -113,14 +113,14 @@ def getPartition(graph, eigen_vector, split_value):
     node_map = mapToN(graph)
     n = len(eigen_vector)
 
-    partition = []
-    partition_complement = []
+    partition = set()
+    partition_complement = set()
 
     for i in range(n):
         if eigen_vector[i] < split_value:
-            partition.append(node_map[i])
+            partition.add(node_map[i])
         else:
-            partition_complement.append(node_map[i])
+            partition_complement.add(node_map[i])
 
     return (partition, partition_complement)
 
