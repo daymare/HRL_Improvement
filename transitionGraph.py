@@ -90,20 +90,6 @@ class TransitionGraph:
 
         return (volume, volume_i)
 
-    # get the complement of the partition
-    # TODO remove, no longer applicable with double partition
-    def invertPartition(self, partition):
-        i_partition = []
-
-        nodes = self.g.nodes()
-
-        for node in nodes:
-            if node not in partition: 
-                i_partition.append(node)
-
-        return i_partition
-
-
     # get a list of all the nodes in the graph
     def getNodes(self):
         return self.g.nodes()
