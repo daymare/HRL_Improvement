@@ -140,9 +140,12 @@ def highlight_partition(smap, partition, state):
         for taxicol in range(5):
             cState = encode(taxirow, taxicol, passid, destid)
 
-            if cState in partition:
-                # color this location yellow 
+            if cState in partition[0]:
+                # this location is in the partition
                 set_pixel(smap, taxirow, taxicol, 'red', True)
+            elif cState in partition[1]:
+                # this location is in the partition complement
+                set_pixel(smap, taxirow, taxicol, 'blue', True)
 
 
 def set_pixel(out, row, column, color, highlight=False):
