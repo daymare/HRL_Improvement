@@ -52,11 +52,8 @@ class TransitionGraph:
         cut_value = self.evaluateCut(partition)
         vol_partition = self.evaluateVolume(partition)
 
-        i_partition = self.invertPartition(partition)
-        vol_i_partition = self.evaluateVolume(i_partition)
-
-        first_term = 2 * cut_value / (vol_partition + cut_value)
-        second_term = 2 * cut_value / (vol_partition + cut_value)
+        first_term = 2 * cut_value / (vol_partition[0] + cut_value)
+        second_term = 2 * cut_value / (vol_partition[1] + cut_value)
 
         ncut_value = first_term + second_term
         return ncut_value
@@ -65,11 +62,11 @@ class TransitionGraph:
     def evaluateCut(self, partition):
         cut = 0
 
-        for nodeID in partition:
+        for nodeID in partition[0]:
             neighbors = self.g.neighbors(nodeID)
 
             for neighborID in neighbors:
-                if neighborID not in partition: # TODO with current partition implementation this is O(n) which is terrible
+                if neighborID in partition[1]: # TODO with current partition implementation this is O(n) which is terrible
                     cut += self.g[nodeID][neighborID]['weight']
 
         return cut
@@ -77,16 +74,24 @@ class TransitionGraph:
     # get the sum of weight on all edges originating in the partition
     def evaluateVolume(self, partition):
         volume = 0
+        volume_i = 0
 
-        for nodeId in partition:
+        for nodeId in partition[0]:
             node = self.g[nodeId]
             for neighbor in node:
                 weight = self.getEdgeWeight(nodeId, neighbor)
                 volume += weight
 
-        return volume
+        for nodeId in partition[1]:
+            node = self.g[nodeId]
+            for neighbor in node:
+                weight = self.getEdgeWeight(nodeId, neighbor)
+                volume_i += weight
+
+        return (volume, volume_i)
 
     # get the complement of the partition
+    # TODO remove, no longer applicable with double partition
     def invertPartition(self, partition):
         i_partition = []
 
