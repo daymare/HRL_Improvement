@@ -12,8 +12,8 @@ import partition_visualization as pv
 import ncut
 
 # constants
-episodes = 20
-maxTimesteps = 2000
+episodes = 1
+maxTimesteps = 200
 render = False
 
 class Wanderer:
@@ -63,7 +63,6 @@ class Wanderer:
     def findPartition(self):
         partition = ncut.LCut(self.graph)
         return partition
-        pv.render_partition(partition)
 
 
 def main():
@@ -81,7 +80,7 @@ def main():
     print "finished finding partition"
 
     # render
-    os.system('clear')
+    #os.system('clear')
     pv.render_partition(partition)
 
 

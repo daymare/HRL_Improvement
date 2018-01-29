@@ -7,7 +7,7 @@
     Simsek, Ozgur, Alicia P. Wolfe, and Andrew G. Barto. "Identifying useful subgoals in reinforcement learning by local graph partitioning." Proceedings of the 22nd international conference on Machine learning. ACM, 2005. 
 """
 
-import numpy
+import numpy as np
 
 """
     perform the LCut algorithm as described in Simsek and Barto (2005) except instead of outputting the access states we output the partition with the lowest NCut value from a set number of eigenvalues
@@ -18,18 +18,28 @@ import numpy
 def LCut(graph):
     D = constructD(graph)
     W = constructW(graph)
-    D_inverse = numpy.linalg.inv(D)
+    D_inverse = np.linalg.inv(D)
 
     # build the system
-    system = (D - W) * D_inverse
+    system = np.mat(D-W) * np.mat(D_inverse)
+
+    print "matrix D: \n{}".format(D)
+    print "matrix W: \n{}".format(W)
+    print "D minus W: \n{}".format((D-W))
+    print "D_inverse: \n{}".format(D_inverse)
+    print "system: \n{}".format(system)
 
     # find the second eigenvector of the system
-    eigenValues, eigenVectors = numpy.linalg.eig(system)
+    eigenValues, eigenVectors = np.linalg.eig(system)
     # sort the eigenvalues/eigenvectors to find the second smallest eigenvalue and its corresponding eigenvector
     eigenValues, eigenVectors = sortEigen(eigenValues, eigenVectors)
 
+    print "eigenValues: \n{}".format(eigenValues)
+    print "eigenVectors: \n{}".format(eigenVectors)
+
     # get the partition based on the second eigenvalue
-    partition = findBestPartition(graph, eigenVectors[1], 5)
+    secondEigenvalue = np.squeeze(np.asarray(eigenVectors[1]))
+    partition = findBestPartition(graph, secondEigenvalue, 5)
 
     return partition
 
@@ -37,7 +47,7 @@ def LCut(graph):
     Sort a list of eigenvalues and it's corresponding list of eigenVectors
 """
 def sortEigen(eigenValues, eigenVectors):
-    idx = eigenValues.argsort()[::-1]
+    idx = eigenValues.argsort()
     eigenValues = eigenValues[idx]
     eigenVectors = eigenVectors[:, idx]
 
@@ -74,8 +84,8 @@ def mapToN(graph):
     eigenVector - second eigenvector of the system described in Simsek and Barto (2005)
 """
 def findBestPartition(graph, eigen_vector, num_cuts):
-    minimum = min(eigen_vector)
-    maximum = max(eigen_vector)
+    minimum = np.amin(eigen_vector)
+    maximum = np.amax(eigen_vector)
     eigen_range = maximum - minimum
 
     partition_distance = eigen_range / (num_cuts + 1)
@@ -97,10 +107,14 @@ def findBestPartition(graph, eigen_vector, num_cuts):
         # evaluate parition and find current max
         cut_value = graph.evaluateNCut(partition)
 
+        #print "current cut: {} current partition sizes: {}, {}".format(cut_value, len(partition[0]), len(partition[1]))
+
         if cut_value > max_cut:
             # set the current values as new maximums
             max_partition = partition
             max_cut = cut_value
+
+    #print "max cut: {} max partition sizes: {}, {}".format(max_cut, len(max_partition[0]), len(max_partition[1]))
 
     return max_partition
 
@@ -138,7 +152,7 @@ def getPartition(graph, eigen_vector, split_value):
 """
 def constructD(graph):
     n, _ = graph.getSize()
-    D = numpy.zeros((n,n))
+    D = np.zeros((n,n))
 
     node_map = mapToN(graph)
 
@@ -154,13 +168,13 @@ def constructD(graph):
     construct the weight matrix as described in Shi and Malik (2000)
 
     Let N be the number of vertices in the graph
-    Let w_i_j be the weight on the edge between vertices i 
+    Let w_i_j be the weight on the edge between vertices i and j
 
     W will be the matrix where W(i, j) = w_i_j
 """
 def constructW(graph):
     n, _ = graph.getSize()
-    W = numpy.zeros((n,n))
+    W = np.zeros((n,n))
 
     node_map = mapToN(graph)
 
@@ -168,7 +182,9 @@ def constructW(graph):
         for j in range(n):
             firstState = node_map[i]
             secondState = node_map[j]
-            W[i, j] = graph.getEdgeWeight(firstState, secondState)
+            edgeWeight = graph.getEdgeWeight(firstState, secondState)
+
+            W[i, j] = edgeWeight
 
     return W
     
