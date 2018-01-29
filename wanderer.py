@@ -13,7 +13,7 @@ import ncut
 
 # constants
 episodes = 20
-maxTimesteps = 2000
+maxTimesteps = 200
 render = False
 
 class Wanderer:
@@ -65,6 +65,8 @@ class Wanderer:
         return partition
         pv.render_partition(partition)
 
+    def improvePartition(self, partition):
+        partition = self.graph.improveAlgorithm(partition)
 
 def main():
     agent = Wanderer()
@@ -83,6 +85,14 @@ def main():
     # render
     os.system('clear')
     pv.render_partition(partition)
+
+    # improve partition
+    improved_partition = agent.improvePartition(partition)
+
+    # render new partition
+    os.system('clear')
+    pv.render_partition(improved_partition)
+    
 
 
 if __name__ == '__main__':

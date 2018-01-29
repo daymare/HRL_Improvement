@@ -9,7 +9,7 @@ class TransitionGraph:
         self.g = nx.Graph()
 
     def improveAlgorithm(self, partition):
-        for i in range(MIN_CUTS_PER_IMPROVE):
+        for i in range(TransitionGraph.MIN_CUTS_PER_IMPROVE):
             # set up source and sink
             for node in self.g.nodes_iter(data=False):
                 if node == 'source' or node == 'sink':
@@ -28,6 +28,8 @@ class TransitionGraph:
             # remove source and sink nodes
             self.g.remove_node('source')
             self.g.remove_node('sink')
+
+        return partition
 
     """
         calculate the approximate ncut value of the partion as described in Simsek and Barto (2005)
