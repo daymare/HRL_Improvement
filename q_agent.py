@@ -15,7 +15,8 @@ import numpy as np
 import random
 
 # constants
-episodes = 5
+trainingEpisodes = 50
+dataEpisodes = 1
 maxTimesteps = 200
 render = False
 
@@ -68,7 +69,8 @@ class QAgent:
             currentState = nextState
             
             # add to transition graph
-            self.graph.addTransition(lastState, currentState)
+            if self.numEpisodes >= trainingEpisodes:
+                self.graph.addTransition(lastState, currentState)
 
             # render the environment
             if render == True:
@@ -105,7 +107,7 @@ def main():
 
     # populate transition graph
     print "running episodes"
-    for i in range(episodes):
+    for i in range(trainingEpisodes + dataEpisodes):
         agent.runEpisode(maxTimesteps, render)
     print "finished running episodes"
     
