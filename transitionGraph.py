@@ -11,23 +11,26 @@ class TransitionGraph:
     def improveAlgorithm(self, partition):
         for i in range(TransitionGraph.MIN_CUTS_PER_IMPROVE):
             # set up source and sink
-            for node in self.g.nodes_iter(data=False):
+            self.g.add_node('source')
+            self.g.add_node('sink')
+
+            for node in self.g.nodes(data=False):
                 if node == 'source' or node == 'sink':
                     continue
-                elif node in partition:
+                elif node in partition[0]:
                     self.g.add_edge('source', node, weight=1)
-                else:
+                elif node in partition[1]:
                     self.g.add_edge(node, 'sink', weight=1)
             
             # run max_flow_min_cut
             cut_value, new_partition = nx.minimum_cut(self.g, 'source', 'sink')
 
-            # update the partition
-            partition = new_partition[0]
-
             # remove source and sink nodes
             self.g.remove_node('source')
             self.g.remove_node('sink')
+
+            # update the partition
+            partition = (new_partition[0], new_partition[1])
 
         return partition
 
