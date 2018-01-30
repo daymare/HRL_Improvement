@@ -80,7 +80,7 @@ def main():
     print "finished finding partition"
 
     # render
-    #os.system('clear')
+    os.system('clear')
     pv.render_partition(partition)
 
 

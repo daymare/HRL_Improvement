@@ -23,19 +23,10 @@ def LCut(graph):
     # build the system
     system = np.mat(D-W) * np.mat(D_inverse)
 
-    print "matrix D: \n{}".format(D)
-    print "matrix W: \n{}".format(W)
-    print "D minus W: \n{}".format((D-W))
-    print "D_inverse: \n{}".format(D_inverse)
-    print "system: \n{}".format(system)
-
     # find the second eigenvector of the system
     eigenValues, eigenVectors = np.linalg.eig(system)
     # sort the eigenvalues/eigenvectors to find the second smallest eigenvalue and its corresponding eigenvector
     eigenValues, eigenVectors = sortEigen(eigenValues, eigenVectors)
-
-    print "eigenValues: \n{}".format(eigenValues)
-    print "eigenVectors: \n{}".format(eigenVectors)
 
     # get the partition based on the second eigenvalue
     secondEigenvalue = np.squeeze(np.asarray(eigenVectors[1]))
@@ -107,14 +98,10 @@ def findBestPartition(graph, eigen_vector, num_cuts):
         # evaluate parition and find current max
         cut_value = graph.evaluateNCut(partition)
 
-        #print "current cut: {} current partition sizes: {}, {}".format(cut_value, len(partition[0]), len(partition[1]))
-
         if cut_value > max_cut:
             # set the current values as new maximums
             max_partition = partition
             max_cut = cut_value
-
-    #print "max cut: {} max partition sizes: {}, {}".format(max_cut, len(max_partition[0]), len(max_partition[1]))
 
     return max_partition
 
