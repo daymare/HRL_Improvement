@@ -55,13 +55,13 @@ class QAgent:
                 self.alpha -= self.alphaStepDrop
 
             # get action
-            action = getAction(currentState)
+            action = self.getAction(currentState)
 
             # perform action
             nextState, reward, terminal, _ = self.env.step(action)
 
             # update q function
-            self.q[currentState][action] = (1-self.alpha) * self.q[state][action] + (self.alpha) * (reward + self.gamma * self.q[nextState].max())
+            self.q[currentState][action] = (1-self.alpha) * self.q[currentState][action] + (self.alpha) * (reward + self.gamma * self.q[nextState].max())
 
             # process transition information
             lastState = currentState
@@ -86,7 +86,7 @@ class QAgent:
         if random_num < self.epsilon:
             action = self.env.action_space.sample()
         else:
-            action = self.Q[state].argmax()
+            action = self.q[state].argmax()
 
         return action
         
@@ -117,13 +117,6 @@ def main():
     # render
     os.system('clear')
     pv.render_partition(partition)
-
-    # improve partition
-    improved_partition = agent.improvePartition(partition)
-
-    # render new partition
-    os.system('clear')
-    pv.render_partition(improved_partition)
     
 
 
